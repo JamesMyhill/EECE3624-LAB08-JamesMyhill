@@ -38,7 +38,7 @@
 int main(void)
 {
 	/* Your code here.  */
-
+	//unsigned char count = 0;
     /* See the UARTLibrary.h for available calls.
 	 *     	  // initialize the UART
 	 *     	  uart_init(BAUDRATE, DATABITS, STOPBITS, PARITY);
@@ -52,10 +52,55 @@ int main(void)
 	 */
 
 	uart_init(BAUDRATE, DATABITS, STOPBITS, PARITY);
+	//initial_msg();
 	while(1)
 	{
 		/* your loop code here */
+		//while(count != 3){
+			
+		//}
+		uart_tx('h');
 		
 	}
 	return 0;
+}
+
+void initial_msg(){
+	const char blank[] = "\r\n\0";
+	const char head_1[] = "RS232 Communications Server\r\n";
+	const char head_2[] = "Status: Active\r\n";
+	const char name[] = "James Myhill\r\n";
+	const char classMsg[] = "EECE3624\r\n";
+	const char date[] = "Fall 2026\r\n";
+	
+	unsigned char i = 0;
+	while(blank[i] != '\0'){
+		uart_tx(blank[i]);
+		i++;
+	}
+	i = 0;
+	while(head_1[i] != '\0'){
+		uart_tx(head_1[i]);
+		i++;
+	}
+	i = 0;
+	while(head_2[i] != '\0'){
+		uart_tx(head_2[i]);
+		i++;
+	}
+	i = 0;
+	while(name[i] != '\0'){
+		uart_tx(name[i]);
+		i++;
+	}
+	i = 0;
+	while(date[i] != '\0'){
+		uart_tx(date[i]);
+		i++;
+	}
+	i = 0;
+	while(blank[i] != '\0'){
+		uart_tx(blank[i]);
+		i++;
+	}
 }

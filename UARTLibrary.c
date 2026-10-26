@@ -32,27 +32,78 @@
 // For example,
 //     usart1_init(9600,8,1,0);
 // sets the baudrate to 9600, with 8 data bits, 1 stop bit, and no parity
+
+#define F_OSC 7372800
+#define USART_BAUDRATE 9600
+#define BAUD_PRESCALE ((F_OSC/(USART_BAUDRATE * 16UL))-1)
+
 void uart_init(long unsigned int baudrate, unsigned char databits, unsigned char stopbits, unsigned char parity) {
     /* your code here */
+	
 	// set baud rate (via UBRR0 high and low registers)
-    
+    UBRR1H = (BAUD_PRESCALE >> 8);
+    UBRR1L = (BAUD_PRESCALE);
+
+	
+	 // Reset USART configuration registers
+	 UCSR1A = 0;
+	 UCSR1B = 0;
+	 UCSR1C = 0;
+	 
 	// set databits
-    
+    if (databits == 5)
+    {
+	    UCSR1B |= ~(1 << UCSZ12);
+    }
+    else if (databits == 6)
+    {
+	    UCSR1C |= (1 << UCSZ10);
+	    UCSR1B |= ~(1 << UCSZ12);
+    }
+    else if (databits == 7)
+    {
+	    UCSR1C |= (1 << UCSZ11);
+	    UCSR1B |= ~(1 << UCSZ12);
+    }
+    else if (databits == 8)
+    {
+	    UCSR1C |= (1 << UCSZ11) | (1 << UCSZ10);
+	    UCSR1B |= ~(1 << UCSZ12);
+    }
+	
+
 	// set parity
-    
+	UCSR1C |= ~((1 << UPM11) | (1 << UPM10));
+
+	if (parity == 1)
+	{
+		UCSR1C |= (1 << UPM11) | (1 << UPM10);  // Odd parity
+	}
+	else if (parity == 2)
+	{
+		UCSR1C |= (1 << UPM11);                 // Even parity
+	}
+	
+	
     // set stopbits
-    
+    if (stopbits == 2) {
+    UCSR1C |= (1 << USBS1);
+    }
+	
+	
 	// finally, enable receiver and transmitter
-    
+    UCSR1B = (1 << RXEN1)|(1 << TXEN1);
 }
 
 // This function waits for space in the USART transmit buffer. When space
 // is available, the function places an unsigned character value (passed in
 // as the function's only argument) in the buffer and returns. No error
 // checking is performed and the function does not return a value.
+
 void uart_tx(unsigned char data) {
     /* your code here */
-
+	while(!(UCSR1A & (1 << UDRE1))); // wait for a character to arrive
+	UDR1 = data; // transmit data
 }
 
 // This function blocks until a character is received in the USART input
@@ -60,5 +111,6 @@ void uart_tx(unsigned char data) {
 // an unsigned character. No error checking is performed.
 unsigned char uart_rx(void) {
 	/* your code here */
-    
+    while(!(UCSR1A & (1 << RXC1))) // wait for a character to arrive
+    return UDR1; // return received character to caller
 }
