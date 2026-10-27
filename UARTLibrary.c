@@ -102,8 +102,10 @@ void uart_init(long unsigned int baudrate, unsigned char databits, unsigned char
 
 void uart_tx(unsigned char data) {
     /* your code here */
-	while(!(UCSR1A & (1 << UDRE1))); // wait for a character to arrive
-	UDR1 = data; // transmit data
+	while(!(UCSR1A & (1 << UDRE1))){
+		}				// wait for a character to arrive
+		UDR1 = data;	// transmit data
+	
 }
 
 // This function blocks until a character is received in the USART input
@@ -111,6 +113,8 @@ void uart_tx(unsigned char data) {
 // an unsigned character. No error checking is performed.
 unsigned char uart_rx(void) {
 	/* your code here */
-    while(!(UCSR1A & (1 << RXC1))) // wait for a character to arrive
+    while(!(UCSR1A & (1 << RXC1))){
+		
+		} // wait for a character to arrive
     return UDR1; // return received character to caller
 }

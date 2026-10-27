@@ -12,9 +12,6 @@ Discarded input sections
  .text          0x00000000        0x0 Lab08.o
  .data          0x00000000        0x0 Lab08.o
  .bss           0x00000000        0x0 Lab08.o
- .rodata        0x00000000       0x59 Lab08.o
- .text.initial_msg
-                0x00000000      0x202 Lab08.o
  .text          0x00000000        0x0 UARTLibrary.o
  .data          0x00000000        0x0 UARTLibrary.o
  .bss           0x00000000        0x0 UARTLibrary.o
@@ -179,7 +176,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x278
+.text           0x00000000      0x470
  *(.vectors)
  .vectors       0x00000000       0x8c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATmega_DFP/2.2.509/gcc/dev/atmega128a/avr51/crtatmega128a.o
                 0x00000000                __vector_default
@@ -273,18 +270,21 @@ END GROUP
                 0x000000b6                __vector_20
                 0x000000b8                . = ALIGN (0x2)
  *(.text.*)
- .text.main     0x000000b8       0x20 Lab08.o
+ .text.main     0x000000b8       0x22 Lab08.o
                 0x000000b8                main
+ .text.initial_msg
+                0x000000da      0x1f6 Lab08.o
+                0x000000da                initial_msg
  .text.uart_init
-                0x000000d8      0x166 UARTLibrary.o
-                0x000000d8                uart_init
- .text.uart_tx  0x0000023e       0x36 UARTLibrary.o
-                0x0000023e                uart_tx
-                0x00000274                . = ALIGN (0x2)
+                0x000002d0      0x166 UARTLibrary.o
+                0x000002d0                uart_init
+ .text.uart_tx  0x00000436       0x36 UARTLibrary.o
+                0x00000436                uart_tx
+                0x0000046c                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000274        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
-                0x00000274                _exit
-                0x00000274                exit
+ .fini9         0x0000046c        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+                0x0000046c                _exit
+                0x0000046c                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -303,36 +303,38 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000274        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+ .fini0         0x0000046c        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000278                _etext = .
+                0x00000470                _etext = .
 
-.data           0x00800100        0x0 load address 0x00000278
+.data           0x00800100       0x5a load address 0x00000470
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
  *(.gnu.linkonce.d*)
  *(.rodata)
+ .rodata        0x00800100       0x59 Lab08.o
  *(.rodata*)
  *(.gnu.linkonce.r*)
-                0x00800100                . = ALIGN (0x2)
-                0x00800100                _edata = .
-                0x00800100                PROVIDE (__data_end, .)
+                0x0080015a                . = ALIGN (0x2)
+ *fill*         0x00800159        0x1 
+                0x0080015a                _edata = .
+                0x0080015a                PROVIDE (__data_end, .)
 
-.bss            0x00800100        0x0
+.bss            0x0080015a        0x0
                 [!provide]                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
                 [!provide]                PROVIDE (__bss_end, .)
-                0x00000278                __data_load_start = LOADADDR (.data)
-                0x00000278                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000470                __data_load_start = LOADADDR (.data)
+                0x000004ca                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800100        0x0
+.noinit         0x0080015a        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800100                _end = .
+                0x0080015a                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -408,23 +410,23 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xa0c
+.debug_info     0x00000000      0xa20
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x780 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATmega_DFP/2.2.509/gcc/dev/atmega128a/avr51/crtatmega128a.o
- .debug_info    0x00000780      0x189 Lab08.o
- .debug_info    0x00000909      0x103 UARTLibrary.o
+ .debug_info    0x00000780      0x19d Lab08.o
+ .debug_info    0x0000091d      0x103 UARTLibrary.o
 
-.debug_abbrev   0x00000000      0x829
+.debug_abbrev   0x00000000      0x841
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x718 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATmega_DFP/2.2.509/gcc/dev/atmega128a/avr51/crtatmega128a.o
- .debug_abbrev  0x00000718       0x95 Lab08.o
- .debug_abbrev  0x000007ad       0x7c UARTLibrary.o
+ .debug_abbrev  0x00000718       0xad Lab08.o
+ .debug_abbrev  0x000007c5       0x7c UARTLibrary.o
 
-.debug_line     0x00000000      0x437
+.debug_line     0x00000000      0x43d
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x16a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATmega_DFP/2.2.509/gcc/dev/atmega128a/avr51/crtatmega128a.o
- .debug_line    0x0000016a      0x143 Lab08.o
- .debug_line    0x000002ad      0x18a UARTLibrary.o
+ .debug_line    0x0000016a      0x149 Lab08.o
+ .debug_line    0x000002b3      0x18a UARTLibrary.o
 
 .debug_frame    0x00000000       0xd4
  *(.debug_frame)

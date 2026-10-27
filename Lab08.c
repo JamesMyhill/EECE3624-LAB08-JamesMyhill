@@ -34,6 +34,8 @@
 #define PARITY      0 // 0=none, 1=odd, 2=even
 
 /* Your code here.  */
+DDRC = 0xFF;  // Set the Direction for all PORTA pints to be outputs
+PORTC = 0xFF;  // Set the PORTA for all pins to be high (i.e. OFF)
 
 int main(void)
 {
@@ -52,14 +54,15 @@ int main(void)
 	 */
 
 	uart_init(BAUDRATE, DATABITS, STOPBITS, PARITY);
-	//initial_msg();
-	while(1)
+	initial_msg();
+	while(1) 
 	{
 		/* your loop code here */
-		//while(count != 3){
-			
-		//}
-		uart_tx('h');
+		//unsigned char temp = uart_rx();
+		//while()
+		//PORTC = ~(1<<0);
+		//uart_tx(temp);
+		 
 		
 	}
 	return 0;
