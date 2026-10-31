@@ -50,30 +50,28 @@ void uart_init(long unsigned int baudrate, unsigned char databits, unsigned char
 	 UCSR1B = 0;
 	 UCSR1C = 0;
 	 
-	// set databits
-    if (databits == 5)
-    {
-	    UCSR1B |= ~(1 << UCSZ12);
-    }
-    else if (databits == 6)
+	 DDRC = 0xFF;
+	 PORTC = 0xFF;
+	 
+	//UCSR1C = (1 << UCSZ11)|(1 << UCSZ10); // Wei: Simplify the code to do just 8n1
+	 
+	// set databits 
+	
+    if (databits == 6)
     {
 	    UCSR1C |= (1 << UCSZ10);
-	    UCSR1B |= ~(1 << UCSZ12);
     }
     else if (databits == 7)
     {
 	    UCSR1C |= (1 << UCSZ11);
-	    UCSR1B |= ~(1 << UCSZ12);
     }
     else if (databits == 8)
     {
 	    UCSR1C |= (1 << UCSZ11) | (1 << UCSZ10);
-	    UCSR1B |= ~(1 << UCSZ12);
     }
 	
 
 	// set parity
-	UCSR1C |= ~((1 << UPM11) | (1 << UPM10));
 
 	if (parity == 1)
 	{
@@ -89,7 +87,6 @@ void uart_init(long unsigned int baudrate, unsigned char databits, unsigned char
     if (stopbits == 2) {
     UCSR1C |= (1 << USBS1);
     }
-	
 	
 	// finally, enable receiver and transmitter
     UCSR1B = (1 << RXEN1)|(1 << TXEN1);

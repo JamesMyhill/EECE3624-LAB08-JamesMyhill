@@ -29,13 +29,13 @@
 #include "UARTLibrary.h"  // Double quotes for local library.
 
 #define BAUDRATE 9600 // standard values from 1200 to 115200
-#define DATABITS    8 // 5-8
-#define STOPBITS    1 // 1,2
-#define PARITY      0 // 0=none, 1=odd, 2=even
+#define DATABITS    7 // 5-8
+#define STOPBITS    2 // 1,2
+#define PARITY      2 // 0=none, 1=odd, 2=even
 
 /* Your code here.  */
-DDRC = 0xFF;  // Set the Direction for all PORTA pints to be outputs
-PORTC = 0xFF;  // Set the PORTA for all pins to be high (i.e. OFF)
+//DDRC = 0xFF;  // Set the Direction for all PORTA pints to be outputs
+//PORTC = 0xFF;  // Set the PORTA for all pins to be high (i.e. OFF)
 
 int main(void)
 {
@@ -52,16 +52,41 @@ int main(void)
 	 *        // receive a byte from the comm port
 	 *        c = uart_rx();
 	 */
-
+	unsigned int stop = 1;
+	unsigned char inp;
+	unsigned int count = 0;
+	DDRC = 0xFF;
+	PORTC = 0xFF;
 	uart_init(BAUDRATE, DATABITS, STOPBITS, PARITY);
 	initial_msg();
-	while(1) 
+	while(1 && stop) 
 	{
 		/* your loop code here */
-		//unsigned char temp = uart_rx();
-		//while()
-		//PORTC = ~(1<<0);
-		//uart_tx(temp);
+		 inp = uart_rx();
+		 PORTC &= ~(1 << PC0);
+		 _delay_ms(75);
+		 PORTC |= (1 << PC0);
+		 uart_tx(inp);
+		 
+		 if(inp == 'e' || inp == 'E'){
+			 count = 1;
+		 }else if(count == 1 && (inp == 'n' || inp == 'E')){
+			 count = 2;
+		 }else if(count == 2 && (inp == 'd' || inp == 'D')){
+			 stop = 0;
+			 bye();
+		 }else{
+			 count = 0;
+		 }
+		 
+		 if(inp == '\e'){
+			 initial_msg();
+		 }
+		 
+		 
+		 if(inp == '\r'){
+			 uart_tx('\n');			 
+		 }
 		 
 		
 	}
@@ -69,7 +94,7 @@ int main(void)
 }
 
 void initial_msg(){
-	const char blank[] = "\r\n\0";
+	const char blank[] = "\r\n";
 	const char head_1[] = "RS232 Communications Server\r\n";
 	const char head_2[] = "Status: Active\r\n";
 	const char name[] = "James Myhill\r\n";
@@ -104,6 +129,16 @@ void initial_msg(){
 	i = 0;
 	while(blank[i] != '\0'){
 		uart_tx(blank[i]);
+		i++;
+	}
+}
+
+void bye(){
+	const char done[] = "\r\n\r\nBye";
+	unsigned char i;
+	i = 0;
+	while(done[i] != '\0'){
+		uart_tx(done[i]);
 		i++;
 	}
 }
