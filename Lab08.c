@@ -37,6 +37,10 @@
 //DDRC = 0xFF;  // Set the Direction for all PORTA pints to be outputs
 //PORTC = 0xFF;  // Set the PORTA for all pins to be high (i.e. OFF)
 
+// Wei: Declare these functions before main calls them.
+void initial_msg(void);
+void bye(void);
+
 int main(void)
 {
 	/* Your code here.  */
@@ -68,9 +72,10 @@ int main(void)
 		 PORTC |= (1 << PC0);
 		 uart_tx(inp);
 		 
+		 // Wei: Accept uppercase or lowercase letters in the "end" command.
 		 if(inp == 'e' || inp == 'E'){
 			 count = 1;
-		 }else if(count == 1 && (inp == 'n' || inp == 'E')){
+		 }else if(count == 1 && (inp == 'n' || inp == 'N')){
 			 count = 2;
 		 }else if(count == 2 && (inp == 'd' || inp == 'D')){
 			 stop = 0;
@@ -79,7 +84,8 @@ int main(void)
 			 count = 0;
 		 }
 		 
-		 if(inp == '\e'){
+		 // Wei: Use the defined ESC value instead of a compiler-specific escape.
+		 if(inp == ESC){
 			 initial_msg();
 		 }
 		 
@@ -93,7 +99,7 @@ int main(void)
 	return 0;
 }
 
-void initial_msg(){
+void initial_msg(void){
 	const char blank[] = "\r\n";
 	const char head_1[] = "RS232 Communications Server\r\n";
 	const char head_2[] = "Status: Active\r\n";
@@ -121,6 +127,12 @@ void initial_msg(){
 		uart_tx(name[i]);
 		i++;
 	}
+	// Wei: Include the course line in the startup banner.
+	i = 0;
+	while(classMsg[i] != '\0'){
+		uart_tx(classMsg[i]);
+		i++;
+	}
 	i = 0;
 	while(date[i] != '\0'){
 		uart_tx(date[i]);
@@ -133,7 +145,7 @@ void initial_msg(){
 	}
 }
 
-void bye(){
+void bye(void){
 	const char done[] = "\r\n\r\nBye";
 	unsigned char i;
 	i = 0;
