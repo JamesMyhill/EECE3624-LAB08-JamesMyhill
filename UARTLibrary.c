@@ -21,7 +21,7 @@
 #include <avr/io.h>
 #include "UARTLibrary.h"
 
-// Use USART1_init to initialize the USART hardware in the AVR processor.
+// Wei: Use uart_init to initialize the USART1 hardware in the AVR processor.
 // The function takes the following arguments:
 //    - desired baud rate (standard values from 2400 to 115200),
 //    - number of databits (5-8),
@@ -30,28 +30,22 @@
 // No error checking is performed and the function does not return a value.
 //
 // For example,
-//     usart1_init(9600,8,1,0);
+//     uart_init(9600, 8, 1, 0);
 // sets the baudrate to 9600, with 8 data bits, 1 stop bit, and no parity
-
-#define F_OSC 7372800
-#define USART_BAUDRATE 9600
-#define BAUD_PRESCALE ((F_OSC/(USART_BAUDRATE * 16UL))-1)
 
 void uart_init(long unsigned int baudrate, unsigned char databits, unsigned char stopbits, unsigned char parity) {
     /* your code here */
 	
-	// set baud rate (via UBRR0 high and low registers)
-    UBRR1H = (BAUD_PRESCALE >> 8);
-    UBRR1L = (BAUD_PRESCALE);
+	// Wei: Compute the USART1 divisor from the requested baud rate.
+    unsigned long baudPrescale = (F_OSC / (16UL * baudrate)) - 1UL;
+    UBRR1H = (unsigned char)(baudPrescale >> 8);
+    UBRR1L = (unsigned char)baudPrescale;
 
 	
 	 // Reset USART configuration registers
 	 UCSR1A = 0;
 	 UCSR1B = 0;
 	 UCSR1C = 0;
-	 
-	 DDRC = 0xFF;
-	 PORTC = 0xFF;
 	 
 	//UCSR1C = (1 << UCSZ11)|(1 << UCSZ10); // Wei: Simplify the code to do just 8n1
 	 
